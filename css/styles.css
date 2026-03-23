@@ -1,14 +1,23 @@
+/*
+ * Base theme: evermore (before JS runs). Per-puzzle colors are set in js/puzzle.js
+ * from taylor album_palettes — https://taylor.wjakethompson.com/reference/album_palettes
+ */
 :root {
-  --bg: #0f0f12;
-  --surface: #1a1a22;
-  --border: #2e2e3a;
-  --text: #f4f4f8;
-  --muted: #9a9ab0;
-  --accent: #e8b4cb;
-  --accent-dim: #c77d9e;
-  --success: #7dcea0;
-  --error: #e57373;
+  --bg: #160e10;
+  --surface: #421e18;
+  --border: #85796d;
+  --text: #e0d9d7;
+  --muted: #a8988e;
+  --accent: #d37f55;
+  --success: #8fa89a;
+  --error: #c45d4a;
   --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Filled / updated by applyAlbumTheme() for each puzzle */
+  --gradient-mid: #2a1815;
+  --border-soft: rgba(133, 121, 109, 0.42);
+  --accent-focus-glow: rgba(211, 127, 85, 0.3);
+  --btn-grad-start: #b86b45;
+  --btn-text: #160e10;
 }
 
 * {
@@ -25,7 +34,11 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   font-family: var(--font);
-  background: radial-gradient(ellipse 120% 80% at 50% -20%, #2a1f35 0%, var(--bg) 55%);
+  background: radial-gradient(
+    ellipse 120% 90% at 50% -18%,
+    var(--gradient-mid) 0%,
+    var(--bg) 58%
+  );
   background-color: var(--bg);
   color: var(--text);
   display: flex;
@@ -45,9 +58,9 @@ body {
   flex-direction: row;
   align-items: flex-start;
   gap: 1rem;
-  margin: 0 0 1.15rem;
-  padding-bottom: 1.15rem;
-  border-bottom: 1px solid var(--border);
+  margin: 0 0 0.25rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border-soft);
 }
 
 .companion-img-wrap {
@@ -88,25 +101,36 @@ body {
 
 .card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-soft);
   border-radius: 16px;
   padding: 1.5rem 1.35rem;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
 }
 
-.puzzle-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 0.35rem;
-}
-
-h1 {
-  font-size: 1.25rem;
+.companion-heading {
+  font-size: 1.22rem;
   font-weight: 600;
-  margin: 0 0 1rem;
+  margin: 0 0 0.95rem;
   line-height: 1.35;
+  color: var(--text);
+}
+
+.puzzle-heading {
+  font-size: 1.08rem;
+  font-weight: 600;
+  margin: 1rem 0 1rem;
+  line-height: 1.35;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+.companion + .puzzle-heading {
+  margin-top: 1.05rem;
+}
+
+.puzzle-heading--solo {
+  margin-top: 0;
+  margin-bottom: 1rem;
 }
 
 .progress {
@@ -128,7 +152,7 @@ h1 {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+  background: linear-gradient(90deg, var(--border), var(--accent));
   border-radius: 2px;
   transition: width 0.35s ease;
 }
@@ -164,7 +188,8 @@ input[type="text"] {
 }
 
 input[type="text"]:focus {
-  border-color: var(--accent-dim);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-focus-glow);
 }
 
 .actions {
@@ -190,8 +215,12 @@ button:active {
 }
 
 button.primary {
-  background: linear-gradient(135deg, var(--accent-dim), var(--accent));
-  color: #1a0f14;
+  background: linear-gradient(
+    135deg,
+    var(--btn-grad-start),
+    var(--accent)
+  );
+  color: var(--btn-text);
 }
 
 button.secondary {
@@ -222,6 +251,7 @@ button.secondary {
 .complete h2 {
   font-size: 1.2rem;
   margin: 0 0 0.5rem;
+  color: var(--accent);
 }
 
 .complete p {
@@ -252,6 +282,190 @@ code {
   padding: 0.15rem 0.35rem;
   border-radius: 4px;
   font-size: 0.85em;
+}
+
+/* Puzzle 1 (taylor_swift): dark green body copy on light green card; cyan accent overridden in JS */
+html[data-puzzle-id="1"] .card .companion-heading {
+  color: #1d4737;
+}
+
+html[data-puzzle-id="1"] .card .companion-text,
+html[data-puzzle-id="1"] .card .clue,
+html[data-puzzle-id="1"] .card .unscramble-lead,
+html[data-puzzle-id="1"] .card .connections-instructions,
+html[data-puzzle-id="1"] .card .connections-status,
+html[data-puzzle-id="1"] .card .placeholder-puzzle {
+  color: #1d4737;
+}
+
+html[data-puzzle-id="1"] .card .message.success {
+  color: var(--success);
+}
+
+html[data-puzzle-id="1"] .card .message.error {
+  color: var(--error);
+}
+
+html[data-puzzle-id="1"] .card label,
+html[data-puzzle-id="1"] .card .progress {
+  color: #2d4a3e;
+}
+
+/* Scramble box sits on dark --bg; keep letters light */
+html[data-puzzle-id="1"] .unscramble-letters {
+  color: #d4e8dc;
+  border-color: rgba(61, 92, 79, 0.55);
+}
+
+html[data-puzzle-id="1"] input[type="text"] {
+  color: #e7dbcc;
+  border-color: rgba(61, 92, 79, 0.65);
+}
+
+html[data-puzzle-id="1"] .complete h2 {
+  color: #1d4737;
+}
+
+html[data-puzzle-id="1"] .complete p,
+html[data-puzzle-id="1"] .journey-await {
+  color: #1d4737;
+}
+
+/* Begin gate & journey end */
+.begin-gate-actions {
+  margin-top: 1.25rem;
+}
+
+.continue-journey-wrap {
+  margin-top: 1.35rem;
+}
+
+.journey-end .journey-await,
+.journey-await {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--text);
+}
+
+/* —— Unscramble title —— */
+.unscramble-lead {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.unscramble-letters {
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 0.75rem;
+  font-size: clamp(1.05rem, 4.5vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-align: center;
+  word-break: break-all;
+  color: var(--accent);
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+}
+
+.unscramble-letters--long {
+  font-size: clamp(0.52rem, 2.4vw, 0.88rem);
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  padding: 0.65rem 0.5rem;
+}
+
+/* —— Connections puzzle —— */
+.connections-instructions {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.connections-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 420px) {
+  .connections-grid {
+    gap: 0.65rem;
+  }
+}
+
+.connections-tile {
+  margin: 0;
+  padding: 0.75rem 0.4rem;
+  min-height: 3rem;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.12s,
+    opacity 0.2s;
+}
+
+@media (min-width: 380px) {
+  .connections-tile {
+    font-size: 0.78rem;
+    padding: 0.85rem 0.45rem;
+  }
+}
+
+.connections-tile:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.connections-tile:focus {
+  outline: none;
+}
+
+.connections-tile:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-focus-glow);
+}
+
+.connections-tile.selected {
+  background: color-mix(in srgb, var(--accent) 42%, var(--bg));
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.connections-tile.solved {
+  opacity: 0.55;
+  cursor: default;
+  border-style: dashed;
+}
+
+.connections-status {
+  min-height: 1.5rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* color-mix fallback for older Safari: approximate selected state */
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .connections-tile.selected {
+    background: var(--surface);
+    border-color: var(--accent);
+  }
 }
 
 /* Full-screen on phones */
