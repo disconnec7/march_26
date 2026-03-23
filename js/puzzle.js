@@ -1,6 +1,9 @@
 /**
- * Puzzle site — GitHub Pages friendly.
- * Reads ?puzzle=1..15 (also utm_puzzle for shared email-style links).
+ * March 26 puzzle site — email deep-links only.
+ * Expects ?puzzle=1..15 or ?utm_puzzle= (no homepage / no in-site navigation).
+ * Companion images: repo files assets/{year}_sashe.jpg with year = 2010 + puzzle id
+ * (puzzle 1 → 2011_sashe.jpg … puzzle 15 → 2025_sashe.jpg).
+ * Override per puzzle: companion.imageUrl in REGISTRY.
  */
 (function () {
   "use strict";
@@ -23,18 +26,33 @@
       .toLowerCase();
   }
 
-  var COMPANION_PLACEHOLDER_IMAGE_URL =
-    "https://cdn.braze.eu/appboy/communication/assets/image_assets/images/69b9bdbec6776800632af017/original.jpg?1773780414";
-  var COMPANION_PLACEHOLDER_DESCRIPTION =
-    "Hello my trusty companion... I have been searching throughout all the knowledge in the world but can't seem to break this cypher. If you are able to help me I will greatly appreciate it. ";
+  /** Default image path for puzzle id (matches assets/ in the repo). */
+  function defaultCompanionImagePath(puzzleId) {
+    if (puzzleId < 1 || puzzleId > MAX_PUZZLE) return "";
+    var year = 2010 + puzzleId;
+    return "assets/" + year + "_sashe.jpg";
+  }
+
+  /**
+   * Build companion payload for rendering.
+   * If def.companion is missing → no companion block.
+   * If companion has no imageUrl → use default path for def.id.
+   */
+  function getCompanionForRender(def) {
+    if (!def.companion) return null;
+    var c = def.companion;
+    var url = c.imageUrl || defaultCompanionImagePath(def.id);
+    if (!url) return null;
+    return { imageUrl: url, description: c.description };
+  }
 
   var PUZZLE_1 = {
     id: 1,
     title: "Also a Taylor Swift song",
     type: "sequential_clues",
     companion: {
-      imageUrl: COMPANION_PLACEHOLDER_IMAGE_URL,
-      description: COMPANION_PLACEHOLDER_DESCRIPTION,
+      description:
+        "Hello my trusty companion... I have been searching throughout all the knowledge in the world but can't seem to break this cypher. If you are able to help me I will greatly appreciate it. ",
     },
     clues: [
       {
@@ -101,32 +119,13 @@
     );
   }
 
-  function renderHome(root) {
-    var items = "";
-    var i;
-    for (i = 1; i <= MAX_PUZZLE; i += 1) {
-      var available = REGISTRY[i];
-      if (available) {
-        items +=
-          '<li><a href="?puzzle=' +
-          i +
-          '">Puzzle ' +
-          i +
-          "</a></li>";
-      } else {
-        items +=
-          '<li><span class="coming-soon">Puzzle ' + i + "</span></li>";
-      }
-    }
+  /** Shown when the URL has no valid puzzle parameter (not linked from email). */
+  function renderMissingPuzzleParam(root) {
     root.innerHTML =
       '<div class="card">' +
       '<p class="puzzle-label">March 26</p>' +
-      "<h1>Puzzles</h1>" +
-      '<p class="placeholder-puzzle">Pick a puzzle or open a direct link like <code>?puzzle=1</code>.</p>' +
-      '<ul class="puzzle-picker">' +
-      items +
-      "</ul>" +
-      '<p class="param-hint">Gray items are not published yet — add them in <code>js/puzzle.js</code> (<code>REGISTRY</code>).</p>' +
+      "<h1>Almost there</h1>" +
+      '<p class="placeholder-puzzle">This page is opened from a link in your email. If you see this message, open the message again and tap the puzzle link.</p>' +
       "</div>";
   }
 
@@ -137,8 +136,7 @@
       id +
       "</p>" +
       "<h1>Coming soon</h1>" +
-      '<p class="placeholder-puzzle">This puzzle isn’t wired up yet. Add it to <code>REGISTRY</code> in <code>js/puzzle.js</code>.</p>' +
-      '<p class="param-hint"><a href="./">← Back to all puzzles</a></p>' +
+      '<p class="placeholder-puzzle">This puzzle is not available yet.</p>' +
       "</div>";
   }
 
@@ -154,15 +152,15 @@
           "<p>All " +
           total +
           " answers are correct.</p>" +
-          '<p class="param-hint" style="margin-top:1rem;border:0;padding:0;"><a href="./">← Play another puzzle</a></p>' +
           "</div>";
         return;
       }
 
       var c = def.clues[step];
       var pct = ((step + 1) / total) * 100;
+      var companionModel = getCompanionForRender(def);
       var companionBlock =
-        step === 0 ? renderCompanionHtml(def.companion) : "";
+        step === 0 ? renderCompanionHtml(companionModel) : "";
 
       root.innerHTML =
         '<div class="card" id="puzzle-card">' +
@@ -194,7 +192,6 @@
         '<button type="button" class="primary" id="btn-submit">Check</button>' +
         "</div>" +
         '<p class="message" id="msg" aria-live="polite"></p>' +
-        '<p class="param-hint" style="margin-top:0.75rem;border:0;padding:0;"><a href="./">← Home</a></p>' +
         "</div>";
 
       var input = document.getElementById("answer");
@@ -241,7 +238,7 @@
     var id = getPuzzleIdFromUrl();
 
     if (id === null || id < 1 || id > MAX_PUZZLE) {
-      renderHome(root);
+      renderMissingPuzzleParam(root);
       return;
     }
 

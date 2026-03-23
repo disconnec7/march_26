@@ -254,46 +254,6 @@ code {
   font-size: 0.85em;
 }
 
-/* Home: puzzle picker grid */
-.puzzle-picker {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-  margin-top: 1rem;
-  list-style: none;
-  padding: 0;
-}
-
-.puzzle-picker a {
-  display: block;
-  text-align: center;
-  padding: 0.65rem 0.5rem;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  color: var(--text);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 600;
-  background: var(--bg);
-  transition: border-color 0.2s, background 0.2s;
-}
-
-.puzzle-picker a:hover {
-  border-color: var(--accent-dim);
-  background: rgba(232, 180, 203, 0.08);
-}
-
-.puzzle-picker .coming-soon {
-  display: block;
-  text-align: center;
-  padding: 0.65rem 0.5rem;
-  border-radius: 10px;
-  border: 1px dashed var(--border);
-  color: var(--muted);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
 /* Full-screen on phones */
 @media screen and (max-width: 600px) {
   html,
