@@ -22,12 +22,11 @@ If the parameter is missing or invalid, users see a short **“open the link fro
 
 ## Headings (in order)
 
-1. **Companion line** — auto: `{year} Sashe` (year = `2010 + puzzle id`, e.g. `2011 Sashe`).
-2. **Companion block** — image + intro `description` from `REGISTRY`.
-3. **Puzzle title** — `puzzleTitle` in `js/puzzle.js` (e.g. *Also a Taylor Swift song*).  
-   There is no separate “Puzzle 1” label at the top.
+1. **Companion line** — auto: `{year} Sashe` via **`PUZZLE_COMPANION_YEARS`** in `js/puzzle.js` (2011–2013, 2015–2026; **no 2014**).
+2. **Begin gate** — that year’s image + **bio** from **`COMPANION_BIOS`** (not the puzzle rules).
+3. **After Begin** — `puzzleTitle`, then **`companion.description`** from `REGISTRY` (rules), then the puzzle UI.
 
-**Flow:** Each puzzle starts with **only** the companion (year Sashe + image + intro) and a **Begin** button. After you finish, you see **Continue your journey** → then **Await further instructions:**.
+**Flow:** Begin shows **photo + bio** only, then **Begin** → rules + board. After completion: **Continue your journey** → **Await further instructions**.
 
 ## Theme (per puzzle)
 
@@ -57,16 +56,7 @@ CSS variables (`--bg`, `--surface`, `--accent`, etc.) are set in **`applyAlbumTh
 
 ## Companion images (`assets/`)
 
-Default mapping (matches `*_sashe.jpg` in the repo):
-
-| Puzzle id | File |
-|-----------|------|
-| 1 | `assets/2011_sashe.jpg` |
-| 2 | `assets/2012_sashe.jpg` |
-| … | … |
-| 15 | `assets/2025_sashe.jpg` |
-
-Formula: **`assets/{2010 + puzzleId}_sashe.jpg`**
+Default file per puzzle id = **`assets/{year}_sashe.jpg`** where `year` is **`PUZZLE_COMPANION_YEARS[id − 1]`** (puzzle **15** → **`2026_sashe.jpg`**). There is **no** `2014_sashe` in this sequence.
 
 To use a **different file** for one puzzle, set in `js/puzzle.js`:
 

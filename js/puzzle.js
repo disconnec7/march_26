@@ -1,8 +1,8 @@
 /**
  * March 26 puzzle site — email deep-links only.
  * Expects ?puzzle=1..15 or ?utm_puzzle= (no homepage / no in-site navigation).
- * Companion images: repo files assets/{year}_sashe.jpg with year = 2010 + puzzle id
- * (puzzle 1 → 2011_sashe.jpg … puzzle 15 → 2025_sashe.jpg).
+ * Companion years (15 puzzles, no 2014): 2011–2013, 2015–2026 → assets/{year}_sashe.jpg.
+ * Begin gate: that puzzle’s photo + bio (COMPANION_BIOS). After Begin: companion.description (rules) then board.
  * Override per puzzle: companion.imageUrl in REGISTRY.
  */
 (function () {
@@ -196,19 +196,103 @@
       .toLowerCase();
   }
 
-  /** e.g. "2011 Sashe" … "2025 Sashe" (year from puzzle id) */
-  function companionHeading(puzzleId) {
-    if (puzzleId < 1 || puzzleId > MAX_PUZZLE) return "";
-    var year = 2010 + puzzleId;
-    return year + " Sashe";
+  /** Song titles: ignore case, apostrophes, hyphen vs space. */
+  function normalizeSongTitleGuess(s) {
+    return String(s || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[''’]/g, "")
+      .replace(/[-–—]/g, " ")
+      .replace(/\s+/g, " ");
   }
 
-  /** Default image path for puzzle id (matches assets/ in the repo). */
-  function defaultCompanionImagePath(puzzleId) {
-    if (puzzleId < 1 || puzzleId > MAX_PUZZLE) return "";
-    var year = 2010 + puzzleId;
-    return "assets/" + year + "_sashe.jpg";
+  function caesarShiftLetter(ch, delta) {
+    if (/[a-z]/.test(ch)) {
+      var code = ch.charCodeAt(0) - 97;
+      code = (code + delta + 260000) % 26;
+      return String.fromCharCode(97 + code);
+    }
+    if (/[A-Z]/.test(ch)) {
+      var codeU = ch.charCodeAt(0) - 65;
+      codeU = (codeU + delta + 260000) % 26;
+      return String.fromCharCode(65 + codeU);
+    }
+    return ch;
   }
+
+  /**
+   * Encode a title for display: each letter moves n positions backward
+   * in the alphabet (A → V when n = 5, etc.). Spaces & punctuation unchanged.
+   */
+  function caesarEncodeTrackShift(plain, n) {
+    var steps = -Math.abs(Number(n) || 0);
+    return String(plain || "")
+      .split("")
+      .map(function (c) {
+        return caesarShiftLetter(c, steps);
+      })
+      .join("");
+  }
+
+  function caesarAnswerMatches(guess, round) {
+    var g = normalizeSongTitleGuess(guess);
+    if (!g) return false;
+    if (normalizeSongTitleGuess(round.title) === g) return true;
+    if (!round.answers || !round.answers.length) return false;
+    var i;
+    for (i = 0; i < round.answers.length; i++) {
+      if (normalizeSongTitleGuess(round.answers[i]) === g) return true;
+    }
+    return false;
+  }
+
+  /**
+   * Calendar year for each puzzle id (1–15). Skips 2014; ends at 2026.
+   */
+  var PUZZLE_COMPANION_YEARS = [
+    2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+    2025, 2026,
+  ];
+
+  function companionYearForPuzzleId(puzzleId) {
+    if (puzzleId < 1 || puzzleId > MAX_PUZZLE) return null;
+    return PUZZLE_COMPANION_YEARS[puzzleId - 1];
+  }
+
+  /** e.g. "2011 Sashe" … "2026 Sashe" */
+  function companionHeading(puzzleId) {
+    var y = companionYearForPuzzleId(puzzleId);
+    if (y == null) return "";
+    return y + " Sashe";
+  }
+
+  /** Default image path: assets/{year}_sashe.jpg for this puzzle’s companion year. */
+  function defaultCompanionImagePath(puzzleId) {
+    var y = companionYearForPuzzleId(puzzleId);
+    if (y == null) return "";
+    return "assets/" + y + "_sashe.jpg";
+  }
+
+  /**
+   * Bios on the begin gate only (puzzle id order; same years as PUZZLE_COMPANION_YEARS).
+   */
+  var COMPANION_BIOS = [
+    "Early days Sashe, not a care in the world and wearing a suspiciously USA top. Hair Waffles are also on point. Also got her Kika not too long ago.",
+    "Still going strong with the hair waffles, her Kika has now met 172 members of her family.",
+    "Strong forest vibes Sashe with a remarkable upper body strength hanging off a branch. Those gymnastics lessons are really paying off.",
+    "Waffles are a thing of the past, now we're entering the big leagues with some serious curls. This mystical (a little bit murderous looking) Sashe is all about the foreigner life in London, although the pic is definitely in some sketchy BG diskotechka.",
+    "This Sashe has brought the gamster vibes. She has now moved house and is living almost independently. Posing on a Kallax as a power move to any utrepka who dares to face her.",
+    "We're entering the world of travelling Sasheta, this one in particular managed to get her Kika a whole trip. Paellas and beers were top priority here (and have been for a while afterwards).",
+    "This midpoint Sashe has travelled a substantial amount across Europe. Would you dare call her broke by looking at her lavish 2 ice creams and ice tea!?",
+    "This Sashe has entered a more rebellious era. The amount of bracelets has also been steadily increasing. Nobody can tell her what's up as she knows what's up at all times.",
+    "We all know this sexy beast Sashe. Halloween is now taking a significant amount of planning and execution (you would have thought it would be less as we age but nah). Even though a few £5 amazon purchases have been made, the look is always on point.",
+    "This Sashe is now post-covid and studying the ancient ways of СY. We can see her standing in front of this great archive which is prob 3x smaller than her bookshelves at home.",
+    "This Sashe knows what's up even more. We can see her enjoying some cold beverages (definitely alcohol free) and some totally air only shisha with her friends. She has just attended the first close friend wedding which was totally hassle free and is enjoying an illness free group honeymoon.",
+    "We're getting to the later stages Sasheta. This Sashe looking hot af and enjoying another (totally alcohol free) beverage. She is fueling the upcoming skandalche with her Kika on the chill topic of \"So what are we now\". Ah she also got a majestic little princess kitten aka Sukata.",
+    "This Sashe is all about independence. Her IKEA furniture skills are off the charts and does not need a man to get things done. She finally lives alone with her Kika and has her shit together. Also planning a completely stress free wedding for the next Sashe.",
+    "The ultimate Sashe power posing and being totally unstoppable. \"Tremble before me murshischki this is my stage\". ARE YOU READY FOR IT?",
+    "This Sashe is all about the lavish lifestyle. Definitely deserved after all these hassle free years and absolutely 0 problems with her Kika and anyone else. I mean just look at her enjoying this fine (definitely not alcohol) Club Colombia beverage. Oh and she's casually in the middle of the most magnificent palm trees you can find in the world, but whatever.",
+  ];
 
   /**
    * Build companion payload for rendering.
@@ -223,15 +307,49 @@
     return { imageUrl: url, description: c.description };
   }
 
+  /** Begin gate: photo + era bio only (rules come after Begin). */
+  function renderBeginGateCompanionHtml(def) {
+    var pid = def.id;
+    var imgPath = defaultCompanionImagePath(pid);
+    if (!imgPath) return "";
+    var bio = COMPANION_BIOS[pid - 1] || "";
+    var name = companionHeading(pid);
+    return (
+      '<div class="companion" role="region" aria-label="Your companion">' +
+      '<figure class="companion-img-wrap">' +
+      '<img class="companion-img" src="' +
+      escapeAttr(imgPath) +
+      '" alt="' +
+      escapeAttr(name) +
+      '" width="112" loading="lazy" />' +
+      "</figure>" +
+      '<div class="companion-text companion-bio">' +
+      escapeHtml(bio) +
+      "</div>" +
+      "</div>"
+    );
+  }
+
+  /** Puzzle rules (REGISTRY companion.description) after Begin — above the board. */
+  function puzzleMissionBannerHtml(def) {
+    var c = getCompanionForRender(def);
+    var text =
+      c && c.description != null ? String(c.description).trim() : "";
+    if (!text) return "";
+    return (
+      '<div class="puzzle-mission" role="region" aria-label="Puzzle instructions">' +
+      '<div class="puzzle-mission-text">' +
+      escapeHtml(text) +
+      "</div>" +
+      "</div>"
+    );
+  }
+
   var PUZZLE_1 = {
     id: 1,
-    /** Shown below companion + intro; distinct from companion heading. */
     puzzleTitle: "Also a Taylor Swift song",
     type: "sequential_clues",
-    companion: {
-      description:
-        "Hello my trusty companion... I have been searching throughout all the knowledge in the world but can't seem to break this cypher. If you are able to help me I will greatly appreciate it. ",
-    },
+    companion: {},
     clues: [
       {
         text:
@@ -367,10 +485,148 @@
     ],
   };
 
+  /**
+   * Each round: answer title + trackNumber = Caesar shift. Five `hints` are other
+   * songs that share that same track position on their albums (Taylor’s Version
+   * tracklists and names where those editions exist). None of the hints is the answer.
+   */
+  var PUZZLE_4 = {
+    id: 4,
+    puzzleTitle: "The hidden track number",
+    type: "caesar_tracks",
+    companion: {
+      description:
+        "Each round gives you five Taylor songs from five different albums. They have something in common—and that same thing tells you how to undo the scrambled line underneath (shift every letter backward in the alphabet by that amount). Where an album has a Taylor’s Version, use that edition’s tracklist.",
+    },
+    intro:
+      "What’s the link between the five songs? The line under them is another Taylor title, letters shifted backward in the alphabet by that same hidden number. Decode it and type the song name.",
+    rounds: [
+      {
+        title: "cardigan",
+        trackNumber: 2,
+        hints: [
+          { song: "Blank Space", album: "1989 (Taylor's Version)" },
+          { song: "Red", album: "Red (Taylor's Version)" },
+          { song: "Sparks Fly", album: "Speak Now (Taylor's Version)" },
+          { song: "Fifteen", album: "Fearless (Taylor's Version)" },
+          { song: "Maroon", album: "Midnights" },
+        ],
+      },
+      {
+        title: "Anti-Hero",
+        trackNumber: 3,
+        answers: ["anti hero", "antihero"],
+        hints: [
+          { song: "Style", album: "1989 (Taylor's Version)" },
+          { song: "Treacherous", album: "Red (Taylor's Version)" },
+          { song: "Back to December", album: "Speak Now (Taylor's Version)" },
+          { song: "Love Story", album: "Fearless (Taylor's Version)" },
+          { song: "Lover", album: "Lover" },
+        ],
+      },
+      {
+        title: "The Man",
+        trackNumber: 4,
+        hints: [
+          { song: "Out of the Woods", album: "1989 (Taylor's Version)" },
+          { song: "I Knew You Were Trouble", album: "Red (Taylor's Version)" },
+          { song: "Speak Now", album: "Speak Now (Taylor's Version)" },
+          { song: "Hey Stephen", album: "Fearless (Taylor's Version)" },
+          { song: "my tears ricochet", album: "folklore" },
+        ],
+      },
+      {
+        title: "tolerate it",
+        trackNumber: 5,
+        hints: [
+          { song: "All You Had to Do Was Stay", album: "1989 (Taylor's Version)" },
+          { song: "All Too Well", album: "Red (Taylor's Version)" },
+          { song: "Dear John", album: "Speak Now (Taylor's Version)" },
+          { song: "White Horse", album: "Fearless (Taylor's Version)" },
+          { song: "You're On Your Own, Kid", album: "Midnights" },
+        ],
+      },
+      {
+        title: "But Daddy I Love Him",
+        trackNumber: 6,
+        hints: [
+          { song: "Shake It Off", album: "1989 (Taylor's Version)" },
+          { song: "22", album: "Red (Taylor's Version)" },
+          { song: "Mean", album: "Speak Now (Taylor's Version)" },
+          { song: "You Belong With Me", album: "Fearless (Taylor's Version)" },
+          { song: "Midnight Rain", album: "Midnights" },
+        ],
+      },
+    ],
+  };
+
+  var PUZZLE_5 = {
+    id: 5,
+    puzzleTitle: "Track five",
+    type: "sequential_clues",
+    companion: {
+      description:
+        "Eleven studio albums, in release order. One step each: type that album’s track 5 title (as printed on the album).",
+    },
+    clues: [
+      {
+        text: "1 of 11 — Taylor Swift (2006). What’s track 5?",
+        answers: ["cold as you"],
+      },
+      {
+        text: "2 of 11 — Fearless (2008). What’s track 5?",
+        answers: ["white horse"],
+      },
+      {
+        text: "3 of 11 — Speak Now (2010). What’s track 5?",
+        answers: ["dear john"],
+      },
+      {
+        text: "4 of 11 — Red (2012). What’s track 5?",
+        answers: ["all too well"],
+      },
+      {
+        text: "5 of 11 — 1989 (2014). What’s track 5?",
+        answers: ["all you had to do was stay"],
+      },
+      {
+        text: "6 of 11 — reputation (2017). What’s track 5?",
+        answers: ["delicate"],
+      },
+      {
+        text: "7 of 11 — Lover (2019). What’s track 5?",
+        answers: ["the archer"],
+      },
+      {
+        text: "8 of 11 — folklore (2020). What’s track 5?",
+        answers: ["my tears ricochet"],
+      },
+      {
+        text: "9 of 11 — evermore (2020). What’s track 5?",
+        answers: ["tolerate it"],
+      },
+      {
+        text: "10 of 11 — Midnights (2022). What’s track 5?",
+        answers: [
+          "you're on your own, kid",
+          "youre on your own, kid",
+          "you're on your own kid",
+          "youre on your own kid",
+        ],
+      },
+      {
+        text: "11 of 11 — The Tortured Poets Department (2024). What’s track 5?",
+        answers: ["so long, london", "so long london"],
+      },
+    ],
+  };
+
   var REGISTRY = {
     1: PUZZLE_1,
     2: PUZZLE_2,
     3: PUZZLE_3,
+    4: PUZZLE_4,
+    5: PUZZLE_5,
   };
 
   function escapeAttr(str) {
@@ -386,25 +642,6 @@
     return d.innerHTML;
   }
 
-  function renderCompanionHtml(companion) {
-    if (!companion || !companion.imageUrl) return "";
-    var imgSrc = escapeAttr(companion.imageUrl);
-    var desc =
-      companion.description != null ? escapeHtml(companion.description) : "";
-    return (
-      '<div class="companion" role="region" aria-label="From your companion">' +
-      '<figure class="companion-img-wrap">' +
-      '<img class="companion-img" src="' +
-      imgSrc +
-      '" alt="Companion" width="112" loading="lazy" />' +
-      "</figure>" +
-      '<div class="companion-text">' +
-      desc +
-      "</div>" +
-      "</div>"
-    );
-  }
-
   /** After “Continue your journey”. */
   function renderJourneyAwaitScreen(root) {
     root.innerHTML =
@@ -413,7 +650,24 @@
       "</div>";
   }
 
-  function showPuzzleCompleteWithContinue(root, summaryHtml) {
+  /** Braze: log custom event when a numbered puzzle is completed (requires SDK init in braze-init.js). */
+  function logBrazePuzzleCompleted(puzzleId) {
+    if (puzzleId == null || puzzleId < 1 || puzzleId > MAX_PUZZLE) return;
+    var b = window.braze;
+    if (typeof b === "undefined" || typeof b.logCustomEvent !== "function") return;
+    if (typeof b.isInitialized === "function" && !b.isInitialized()) return;
+    try {
+      b.logCustomEvent("puzzle_completed", { puzzle_number: puzzleId });
+      if (typeof b.requestImmediateDataFlush === "function") {
+        b.requestImmediateDataFlush();
+      }
+    } catch (ignore) {
+      /* non-fatal */
+    }
+  }
+
+  function showPuzzleCompleteWithContinue(root, summaryHtml, puzzleId) {
+    logBrazePuzzleCompleted(puzzleId);
     root.innerHTML =
       '<div class="card complete">' +
       summaryHtml +
@@ -429,9 +683,9 @@
     }
   }
 
-  /** Companion + Begin before the main puzzle UI. */
+  /** This puzzle’s companion (image + bio) + Begin; rules after Begin. */
   function renderPuzzleBeginGate(root, def, onBegin) {
-    var companionBlock = renderCompanionHtml(getCompanionForRender(def));
+    var companionBlock = renderBeginGateCompanionHtml(def);
     root.innerHTML =
       '<div class="card begin-gate-card" id="begin-gate">' +
       '<h1 class="companion-heading">' +
@@ -483,7 +737,8 @@
           "<h2>You did it!</h2>" +
             "<p>All " +
             total +
-            " answers are correct.</p>"
+            " answers are correct.</p>",
+          def.id
         );
         return;
       }
@@ -494,10 +749,12 @@
         '<h2 class="puzzle-heading puzzle-heading--solo">' +
         escapeHtml(puzzleTitle) +
         "</h2>";
+      var missionBanner = puzzleMissionBannerHtml(def);
 
       root.innerHTML =
         '<div class="card" id="puzzle-card">' +
         topBlock +
+        missionBanner +
         '<div class="progress">' +
         "<span>" +
         (step + 1) +
@@ -562,6 +819,143 @@
     });
   }
 
+  function renderCaesarTracks(root, def) {
+    var rounds = def.rounds || [];
+    if (!rounds.length) {
+      renderPlaceholder(root, def.id);
+      return;
+    }
+
+    var step = 0;
+    var total = rounds.length;
+    var puzzleTitle =
+      def.puzzleTitle != null
+        ? def.puzzleTitle
+        : def.title != null
+          ? def.title
+          : "Decode the title";
+
+    function renderHintSongList(hints) {
+      var list = hints || [];
+      var i;
+      var lis = "";
+      for (i = 0; i < list.length; i++) {
+        var h = list[i];
+        lis +=
+          '<li class="caesar-hint-item">' +
+          '<span class="caesar-hint-song">' +
+          escapeHtml(h.song) +
+          "</span>" +
+          '<span class="caesar-hint-sep" aria-hidden="true">·</span>' +
+          '<span class="caesar-hint-album">' +
+          escapeHtml(h.album) +
+          "</span>" +
+          "</li>";
+      }
+      return (
+        '<div class="caesar-hint-block">' +
+        '<p class="caesar-hint-lead">Five songs:</p>' +
+        '<ul class="caesar-hint-songs">' +
+        lis +
+        "</ul>" +
+        "</div>"
+      );
+    }
+
+    function renderStep() {
+      if (step >= total) {
+        showPuzzleCompleteWithContinue(
+          root,
+          "<h2>You did it!</h2>" +
+            "<p>All " +
+            total +
+            " titles decoded.</p>",
+          def.id
+        );
+        return;
+      }
+
+      var r = rounds[step];
+      var cipher = caesarEncodeTrackShift(r.title, r.trackNumber);
+      var introHtml =
+        step === 0 && def.intro != null
+          ? '<p class="clue caesar-intro">' + escapeHtml(def.intro) + "</p>"
+          : "";
+      var hintsHtml = renderHintSongList(r.hints);
+      var pct = ((step + 1) / total) * 100;
+      var topBlock =
+        '<h2 class="puzzle-heading puzzle-heading--solo">' +
+        escapeHtml(puzzleTitle) +
+        "</h2>";
+      var missionBanner = puzzleMissionBannerHtml(def);
+
+      root.innerHTML =
+        '<div class="card caesar-card" id="puzzle-card">' +
+        topBlock +
+        missionBanner +
+        '<div class="progress">' +
+        "<span>" +
+        (step + 1) +
+        " / " +
+        total +
+        "</span>" +
+        '<div class="progress-bar"><div class="progress-fill" style="width:' +
+        pct +
+        '%"></div></div>' +
+        "</div>" +
+        introHtml +
+        hintsHtml +
+        '<p class="caesar-scramble-label">Scrambled title</p>' +
+        '<p class="caesar-ciphertext" id="caesar-cipher" aria-label="Encoded title">' +
+        escapeHtml(cipher) +
+        "</p>" +
+        '<div class="form-row">' +
+        '<label for="answer">Song title</label>' +
+        '<input type="text" id="answer" autocomplete="off" placeholder="Decoded title" />' +
+        "</div>" +
+        '<div class="actions">' +
+        '<button type="button" class="primary" id="btn-submit">Check</button>' +
+        "</div>" +
+        '<p class="message" id="msg" aria-live="polite"></p>' +
+        "</div>";
+
+      var input = document.getElementById("answer");
+      var msg = document.getElementById("msg");
+      var btn = document.getElementById("btn-submit");
+
+      function check() {
+        if (!normalizeSongTitleGuess(input.value)) {
+          msg.className = "message error";
+          msg.textContent = "Enter the song title.";
+          return;
+        }
+        if (!caesarAnswerMatches(input.value, r)) {
+          msg.className = "message error";
+          msg.textContent = "Not quite — try again.";
+          return;
+        }
+        msg.className = "message success";
+        msg.textContent = "Correct! Next…";
+        btn.disabled = true;
+        input.disabled = true;
+        setTimeout(function () {
+          step += 1;
+          renderStep();
+        }, 650);
+      }
+
+      btn.addEventListener("click", check);
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") check();
+      });
+      input.focus();
+    }
+
+    renderPuzzleBeginGate(root, def, function () {
+      renderStep();
+    });
+  }
+
   /**
    * Unscramble a song title: def.scrambled (display), def.answers (accepted strings).
    */
@@ -597,7 +991,8 @@
           "<h2>You did it!</h2>" +
             "<p>All " +
             total +
-            " titles unscrambled.</p>"
+            " titles unscrambled.</p>",
+          def.id
         );
         return;
       }
@@ -611,10 +1006,12 @@
         '<h2 class="puzzle-heading puzzle-heading--solo">' +
         escapeHtml(puzzleTitle) +
         "</h2>";
+      var missionBanner = puzzleMissionBannerHtml(def);
 
       root.innerHTML =
         '<div class="card unscramble-card" id="unscramble-root">' +
         topBlock +
+        missionBanner +
         '<div class="progress">' +
         "<span>" +
         (step + 1) +
@@ -711,12 +1108,13 @@
       var topBlock =
         '<h2 class="puzzle-heading puzzle-heading--solo">' +
         escapeHtml(puzzleTitle) +
-        "</h2>" +
-        '<p class="connections-instructions">Select exactly four tiles that belong together. Find all four groups.</p>';
+        "</h2>";
+      var missionBanner = puzzleMissionBannerHtml(def);
 
       root.innerHTML =
         '<div class="card connections-card" id="connections-root">' +
         topBlock +
+        missionBanner +
         '<div class="connections-grid" id="connections-grid" role="group" aria-label="Word tiles"></div>' +
         '<p class="connections-status" id="connections-status" aria-live="polite"></p>' +
         "</div>";
@@ -731,7 +1129,8 @@
         showPuzzleCompleteWithContinue(
           root,
           "<h2>You did it!</h2>" +
-            "<p>You found all four groups.</p>"
+            "<p>You found all four groups.</p>",
+          def.id
         );
       }
 
@@ -857,6 +1256,11 @@
 
     if (def.type === "unscramble") {
       renderUnscramble(root, def);
+      return;
+    }
+
+    if (def.type === "caesar_tracks") {
+      renderCaesarTracks(root, def);
       return;
     }
 

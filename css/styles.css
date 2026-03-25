@@ -49,7 +49,7 @@ body {
 
 .puzzle-app {
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
 }
 
 /* Companion: image left, description right (stacks on narrow screens) */
@@ -292,6 +292,7 @@ html[data-puzzle-id="1"] .card .companion-heading {
 html[data-puzzle-id="1"] .card .companion-text,
 html[data-puzzle-id="1"] .card .clue,
 html[data-puzzle-id="1"] .card .unscramble-lead,
+html[data-puzzle-id="1"] .puzzle-mission-text,
 html[data-puzzle-id="1"] .card .connections-instructions,
 html[data-puzzle-id="1"] .card .connections-status,
 html[data-puzzle-id="1"] .card .placeholder-puzzle {
@@ -329,6 +330,21 @@ html[data-puzzle-id="1"] .complete h2 {
 html[data-puzzle-id="1"] .complete p,
 html[data-puzzle-id="1"] .journey-await {
   color: #1d4737;
+}
+
+/* After Begin: puzzle rules (REGISTRY companion.description), then board */
+.puzzle-mission {
+  margin: 0 0 1rem;
+  padding: 0.85rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  background: color-mix(in srgb, var(--bg) 70%, var(--surface));
+}
+
+.puzzle-mission-text {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text);
 }
 
 /* Begin gate & journey end */
@@ -377,6 +393,74 @@ html[data-puzzle-id="1"] .journey-await {
   letter-spacing: 0.04em;
   line-height: 1.35;
   padding: 0.65rem 0.5rem;
+}
+
+/* —— Caesar / track-number cipher —— */
+.caesar-intro {
+  margin: 0 0 0.85rem;
+}
+
+.caesar-hint-block {
+  margin: 0 0 1.1rem;
+}
+
+.caesar-hint-lead {
+  margin: 0 0 0.55rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.caesar-hint-songs {
+  margin: 0;
+  padding: 0 0 0 1.1rem;
+  list-style: disc;
+  color: var(--text);
+}
+
+.caesar-hint-item {
+  margin: 0.35rem 0;
+  padding-left: 0.15rem;
+  line-height: 1.45;
+}
+
+.caesar-hint-song {
+  font-weight: 600;
+}
+
+.caesar-hint-sep {
+  margin: 0 0.35rem;
+  opacity: 0.55;
+  font-weight: 400;
+}
+
+.caesar-hint-album {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.caesar-scramble-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.caesar-ciphertext {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.1rem;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: clamp(1rem, 2.8vw, 1.3rem);
+  font-weight: 500;
+  letter-spacing: 0.035em;
+  line-height: 1.5;
+  word-break: break-word;
+  color: var(--text);
+  background: color-mix(in srgb, var(--bg) 82%, var(--surface));
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
 }
 
 /* —— Connections puzzle —— */
