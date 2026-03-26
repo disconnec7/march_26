@@ -1,6 +1,5 @@
 /**
- * March 26 puzzle site — email deep-links only.
- * Expects ?puzzle=1..15 or ?utm_puzzle= (no homepage / no in-site navigation).
+ * March 26 puzzle site — home page lists puzzles 1–15; optional ?puzzle= / ?utm_puzzle= or #N for deep links.
  * Companion years (15 puzzles, no 2014): 2011–2013, 2015–2026 → assets/{year}_sashe.jpg.
  * Begin gate: that puzzle’s photo + bio (COMPANION_BIOS). After Begin: companion.description (rules) then board.
  * Override per puzzle: companion.imageUrl in REGISTRY.
@@ -180,13 +179,40 @@
     applyAlbumTheme("evermore");
   }
 
-  function getPuzzleIdFromUrl() {
+  /** Hash `#1`…`#15` wins (in-site nav); else optional `?puzzle=` / `?utm_puzzle=` for links. */
+  function getPuzzleIdFromLocation() {
+    var h = window.location.hash.replace(/^#/, "").trim();
+    if (/^\d+$/.test(h)) {
+      var fromHash = parseInt(h, 10);
+      if (fromHash >= 1 && fromHash <= MAX_PUZZLE) return fromHash;
+    }
     var params = new URLSearchParams(window.location.search);
     var raw = params.get("puzzle") || params.get("utm_puzzle");
     if (raw === null || raw === "") return null;
     var n = parseInt(String(raw).trim(), 10);
     if (Number.isNaN(n)) return null;
+    if (n < 1 || n > MAX_PUZZLE) return null;
     return n;
+  }
+
+  function goHome() {
+    var path = window.location.pathname || "/";
+    if (window.history && typeof window.history.replaceState === "function") {
+      window.history.replaceState(null, "", path);
+    } else {
+      window.location.href = path;
+      return;
+    }
+    mount();
+  }
+
+  /** Small in-card control; clicks handled via delegation on #app. */
+  function puzzleInlineBackHomeHtml() {
+    return (
+      '<p class="puzzle-back-home">' +
+      '<button type="button" class="puzzle-back-home-btn">Back to Home Page</button>' +
+      "</p>"
+    );
   }
 
   function normalizeAnswer(s) {
@@ -532,7 +558,7 @@
           { song: "I Knew You Were Trouble", album: "Red (Taylor's Version)" },
           { song: "Speak Now", album: "Speak Now (Taylor's Version)" },
           { song: "Hey Stephen", album: "Fearless (Taylor's Version)" },
-          { song: "my tears ricochet", album: "folklore" },
+          { song: "Exile", album: "folklore" },
         ],
       },
       {
@@ -754,7 +780,7 @@
           { song: "I Knew You Were Trouble", album: "Red (Taylor's Version)" },
           { song: "Speak Now", album: "Speak Now (Taylor's Version)" },
           { song: "Hey Stephen", album: "Fearless (Taylor's Version)" },
-          { song: "my tears ricochet", album: "folklore" },
+          { song: "Exile", album: "folklore" },
         ],
       },
       {
@@ -1034,7 +1060,7 @@
     type: "caesar_tracks",
     companion: {
       description:
-        "Each round gives you five Taylor songs from five different albums. They have something in common-and that same thing tells you how to undo the scrambled line underneath (shift every letter backward in the alphabet by that amount). Where an album has a Taylor's Version, use that edition's tracklist.",
+        "Each round gives you five Taylor songs from five different albums. They have something in common, and that same thing tells you how to undo the scrambled line underneath (shift every letter backward in the alphabet by that amount). Where an album has a Taylor's Version, use that edition's tracklist.",
     },
     intro:
       "What's the link between the five songs? The line under them is another Taylor title, letters shifted backward in the alphabet by that same hidden number. Decode it and type the song name.",
@@ -1047,7 +1073,7 @@
           { song: "Red", album: "Red (Taylor's Version)" },
           { song: "Fifteen", album: "Fearless (Taylor's Version)" },
           { song: "Style", album: "1989 (Taylor's Version)" },
-          { song: "Spotlight", album: "Life of a Showgirl" },
+          { song: "Elizabeth Taylor", album: "Life of a Showgirl" },
         ],
       },
       {
@@ -1058,7 +1084,7 @@
           { song: "Love Story", album: "Fearless (Taylor's Version)" },
           { song: "Back to December", album: "Speak Now (Taylor's Version)" },
           { song: "Style", album: "1989 (Taylor's Version)" },
-          { song: "Spotlight", album: "Life of a Showgirl" },
+          { song: "Opalite", album: "Life of a Showgirl" },
         ],
       },
       {
@@ -1069,7 +1095,7 @@
           { song: "I Knew You Were Trouble", album: "Red (Taylor's Version)" },
           { song: "Speak Now", album: "Speak Now (Taylor's Version)" },
           { song: "Hey Stephen", album: "Fearless (Taylor's Version)" },
-          { song: "Encore", album: "Life of a Showgirl" },
+          { song: "Father Figure", album: "Life of a Showgirl" },
         ],
       },
       {
@@ -1147,69 +1173,17 @@
     return d.innerHTML;
   }
 
-  function ultimateClueForPuzzleId(puzzleId) {
-    var map = {
-      2: "W",
-      5: "1",
-      7: "B",
-      9: "2",
-      12: "E",
-      15: "L",
-    };
-    return map[puzzleId] || null;
-  }
-
-  /** After “Continue your journey”. */
-  function renderJourneyAwaitScreen(root, puzzleId) {
-    var clue = ultimateClueForPuzzleId(puzzleId);
-    var unlockMsg = "";
-    if (clue) {
-      unlockMsg =
-        '<p class="journey-unlock">You\'ve unlocked <strong>' +
-        escapeHtml(clue) +
-        "</strong>, note it down as you'll need it later.</p>";
-      if (puzzleId === 15) {
-        unlockMsg +=
-          '<p class="journey-unlock journey-unlock--final">All parts of the cipher are now revealed.</p>';
-      }
-    }
-    root.innerHTML =
-      '<div class="card complete journey-end">' +
-      unlockMsg +
-      '<p class="journey-await">Await further instructions</p>' +
-      "</div>";
-  }
-
-  /** Braze: log custom event when a numbered puzzle is completed (requires SDK init in braze-init.js). */
-  function logBrazePuzzleCompleted(puzzleId) {
-    if (puzzleId == null || puzzleId < 1 || puzzleId > MAX_PUZZLE) return;
-    var b = window.braze;
-    if (typeof b === "undefined" || typeof b.logCustomEvent !== "function") return;
-    if (typeof b.isInitialized === "function" && !b.isInitialized()) return;
-    try {
-      b.logCustomEvent("puzzle_completed", { puzzle_number: puzzleId });
-      if (typeof b.requestImmediateDataFlush === "function") {
-        b.requestImmediateDataFlush();
-      }
-    } catch (ignore) {
-      /* non-fatal */
-    }
-  }
-
-  function showPuzzleCompleteWithContinue(root, summaryHtml, puzzleId) {
-    logBrazePuzzleCompleted(puzzleId);
+  function showPuzzleCompleteWithHome(root, summaryHtml) {
     root.innerHTML =
       '<div class="card complete">' +
       summaryHtml +
       '<div class="actions continue-journey-wrap">' +
-      '<button type="button" class="primary" id="btn-continue-journey">Continue your journey</button>' +
+      '<button type="button" class="primary" id="btn-back-home">Back to Home Page</button>' +
       "</div>" +
       "</div>";
-    var cbtn = document.getElementById("btn-continue-journey");
-    if (cbtn) {
-      cbtn.addEventListener("click", function () {
-        renderJourneyAwaitScreen(root, puzzleId);
-      });
+    var hb = document.getElementById("btn-back-home");
+    if (hb) {
+      hb.addEventListener("click", goHome);
     }
   }
 
@@ -1225,17 +1199,56 @@
       '<div class="actions begin-gate-actions">' +
       '<button type="button" class="primary" id="btn-begin-puzzle">Begin</button>' +
       "</div>" +
+      puzzleInlineBackHomeHtml() +
       "</div>";
     document.getElementById("btn-begin-puzzle").addEventListener("click", onBegin);
   }
 
-  /** Shown when the URL has no valid puzzle parameter (not linked from email). */
-  function renderMissingPuzzleParam(root) {
+  /** Landing page: pick puzzle 1–15. */
+  function renderHomePage(root) {
+    var i;
+    var items = "";
+    for (i = 1; i <= MAX_PUZZLE; i++) {
+      var pdef = REGISTRY[i];
+      var ptitle =
+        pdef && pdef.puzzleTitle != null
+          ? pdef.puzzleTitle
+          : "Puzzle " + i;
+      items +=
+        '<li class="puzzle-home-item">' +
+        '<button type="button" class="puzzle-home-btn" data-puzzle-id="' +
+        i +
+        '">' +
+        '<span class="puzzle-home-num">' +
+        i +
+        "</span>" +
+        '<span class="puzzle-home-title">' +
+        escapeHtml(ptitle) +
+        "</span>" +
+        "</button></li>";
+    }
     root.innerHTML =
-      '<div class="card">' +
-      "<h1 class=\"companion-heading\">Almost there</h1>" +
-      '<p class="placeholder-puzzle">This page is opened from a link in your email. If you see this message, open the message again and tap the puzzle link.</p>' +
+      '<div class="card puzzle-home-card">' +
+      '<h1 class="puzzle-home-heading">March 26 puzzles</h1>' +
+      '<p class="puzzle-home-lead">Choose any puzzle to play.</p>' +
+      '<ul class="puzzle-home-list">' +
+      items +
+      "</ul>" +
       "</div>";
+    var btns = root.querySelectorAll(".puzzle-home-btn");
+    var path = window.location.pathname || "/";
+    for (i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function (e) {
+        var pid = parseInt(e.currentTarget.getAttribute("data-puzzle-id"), 10);
+        if (pid < 1 || pid > MAX_PUZZLE) return;
+        if (window.history && typeof window.history.replaceState === "function") {
+          window.history.replaceState(null, "", path + "#" + pid);
+        } else {
+          window.location.hash = String(pid);
+        }
+        mount();
+      });
+    }
   }
 
   function renderPlaceholder(root, id) {
@@ -1247,6 +1260,7 @@
         : "") +
       '<h2 class="puzzle-heading">Coming soon</h2>' +
       '<p class="placeholder-puzzle">This puzzle is not available yet.</p>' +
+      puzzleInlineBackHomeHtml() +
       "</div>";
   }
 
@@ -1262,13 +1276,12 @@
 
     function renderStep() {
       if (step >= total) {
-        showPuzzleCompleteWithContinue(
+        showPuzzleCompleteWithHome(
           root,
           "<h2>You did it!</h2>" +
             "<p>All " +
             total +
-            " answers are correct.</p>",
-          def.id
+            " answers are correct.</p>"
         );
         return;
       }
@@ -1320,6 +1333,7 @@
         '<div class="actions">' +
         '<button type="button" class="primary" id="btn-submit">Check</button>' +
         "</div>" +
+        puzzleInlineBackHomeHtml() +
         '<p class="message" id="msg" aria-live="polite"></p>' +
         "</div>";
 
@@ -1402,6 +1416,7 @@
         '<div class="actions mcq-actions">' +
         buttonsHtml +
         "</div>" +
+        puzzleInlineBackHomeHtml() +
         '<p class="message" id="mcq-msg" aria-live="polite"></p>' +
         "</div>";
 
@@ -1421,10 +1436,9 @@
         msg.textContent = "Correct.";
         for (bi = 0; bi < btns.length; bi++) btns[bi].disabled = true;
         setTimeout(function () {
-          showPuzzleCompleteWithContinue(
+          showPuzzleCompleteWithHome(
             root,
-            "<h2>You did it!</h2><p>Final answer locked in.</p>",
-            def.id
+            "<h2>You did it!</h2><p>Final answer locked in.</p>"
           );
         }, 650);
       }
@@ -1481,13 +1495,12 @@
 
     function renderStep() {
       if (step >= total) {
-        showPuzzleCompleteWithContinue(
+        showPuzzleCompleteWithHome(
           root,
           "<h2>You did it!</h2>" +
             "<p>All " +
             total +
-            " titles decoded.</p>",
-          def.id
+            " titles decoded.</p>"
         );
         return;
       }
@@ -1533,6 +1546,7 @@
         '<div class="actions">' +
         '<button type="button" class="primary" id="btn-submit">Check</button>' +
         "</div>" +
+        puzzleInlineBackHomeHtml() +
         '<p class="message" id="msg" aria-live="polite"></p>' +
         "</div>";
 
@@ -1603,13 +1617,12 @@
 
     function renderStep() {
       if (step >= total) {
-        showPuzzleCompleteWithContinue(
+        showPuzzleCompleteWithHome(
           root,
           "<h2>You did it!</h2>" +
             "<p>All " +
             total +
-            " titles unscrambled.</p>",
-          def.id
+            " titles unscrambled.</p>"
         );
         return;
       }
@@ -1652,6 +1665,7 @@
         '<div class="actions">' +
         '<button type="button" class="primary" id="unscramble-submit">Submit</button>' +
         "</div>" +
+        puzzleInlineBackHomeHtml() +
         '<p class="message" id="unscramble-result" aria-live="polite"></p>' +
         "</div>";
 
@@ -1734,6 +1748,7 @@
         missionBanner +
         '<div class="connections-grid" id="connections-grid" role="group" aria-label="Word tiles"></div>' +
         '<p class="connections-status" id="connections-status" aria-live="polite"></p>' +
+        puzzleInlineBackHomeHtml() +
         "</div>";
 
       var gridEl = document.getElementById("connections-grid");
@@ -1743,11 +1758,10 @@
       var foundCount = 0;
 
       function renderWin() {
-        showPuzzleCompleteWithContinue(
+        showPuzzleCompleteWithHome(
           root,
           "<h2>You did it!</h2>" +
-            "<p>You found all four groups.</p>",
-          def.id
+            "<p>You found all four groups.</p>"
         );
       }
 
@@ -1844,12 +1858,12 @@
 
   function mount() {
     var root = document.getElementById("app");
-    var id = getPuzzleIdFromUrl();
+    var id = getPuzzleIdFromLocation();
 
-    if (id === null || id < 1 || id > MAX_PUZZLE) {
+    if (id === null) {
       document.documentElement.removeAttribute("data-puzzle-id");
       applyAlbumTheme("evermore");
-      renderMissingPuzzleParam(root);
+      renderHomePage(root);
       return;
     }
 
@@ -1888,6 +1902,19 @@
 
     renderPlaceholder(root, id);
   }
+
+  window.addEventListener("hashchange", mount);
+
+  (function wireAppNavDelegation() {
+    var app = document.getElementById("app");
+    if (!app) return;
+    app.addEventListener("click", function (e) {
+      if (e.target.closest(".puzzle-back-home-btn")) {
+        e.preventDefault();
+        goHome();
+      }
+    });
+  })();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", mount);

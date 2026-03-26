@@ -1,6 +1,6 @@
 # March 26 — puzzle site (GitHub Pages)
 
-Static puzzles: HTML, CSS, vanilla JavaScript. **No homepage** — visitors are expected to open a link from email with a puzzle parameter.
+Static puzzles: HTML, CSS, vanilla JavaScript. The **home page** lists all **15** puzzles; optional **deep links** still work.
 
 ## Files
 
@@ -11,14 +11,11 @@ Static puzzles: HTML, CSS, vanilla JavaScript. **No homepage** — visitors are 
 | `js/puzzle.js` | Engine & `REGISTRY` |
 | `assets/` | Companion images (see below) |
 
-## URL (email links)
+## URLs (optional deep links)
 
-Use **`puzzle`** or **`utm_puzzle`** (same value):
-
-- `https://<your-site>/index.html?puzzle=1`
-- `https://<your-site>/index.html?utm_puzzle=1`
-
-If the parameter is missing or invalid, users see a short **“open the link from your email”** message — there is no site navigation.
+- **Home:** `https://<your-site>/index.html` — pick any puzzle.
+- **Hash:** `https://<your-site>/index.html#3` opens puzzle **3** (browser back/forward updates the list).
+- **Query (legacy / email):** `?puzzle=1` or `?utm_puzzle=1` — same value. If both hash and query are present, **hash wins**.
 
 ## Headings (in order)
 
@@ -26,7 +23,7 @@ If the parameter is missing or invalid, users see a short **“open the link fro
 2. **Begin gate** — that year’s image + **bio** from **`COMPANION_BIOS`** (not the puzzle rules).
 3. **After Begin** — `puzzleTitle`, then **`companion.description`** from `REGISTRY` (rules), then the puzzle UI.
 
-**Flow:** Begin shows **photo + bio** only, then **Begin** → rules + board. After completion: **Continue your journey** → **Await further instructions**.
+**Flow:** Begin shows **photo + bio** only, then **Begin** → rules + board. After completion: **Back to Home Page** returns to the picker.
 
 ## Theme (per puzzle)
 
@@ -52,7 +49,7 @@ Each puzzle id uses one album palette from the [taylor `album_palettes` referenc
 
 (`showgirl` is in `js/puzzle.js` for reuse but not assigned until you add a 16th puzzle.)
 
-CSS variables (`--bg`, `--surface`, `--accent`, etc.) are set in **`applyAlbumThemeForPuzzleId()`** in `js/puzzle.js`. Invalid/missing URL → **evermore** fallback.
+CSS variables (`--bg`, `--surface`, `--accent`, etc.) are set in **`applyAlbumThemeForPuzzleId()`** in `js/puzzle.js`. The **home** page uses the **evermore** palette; each puzzle uses its own album theme.
 
 ## Companion images (`assets/`)
 

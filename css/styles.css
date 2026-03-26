@@ -47,6 +47,39 @@ body {
   padding: 1.25rem;
 }
 
+/* In-card “Back to Home” (below primary actions, bottom-aligned in flow) */
+.puzzle-back-home {
+  margin: 0.55rem 0 0;
+  padding: 0;
+  text-align: left;
+}
+
+.puzzle-back-home-btn {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.puzzle-back-home-btn:hover {
+  color: var(--accent);
+}
+
+.puzzle-back-home-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 .puzzle-app {
   width: 100%;
   max-width: 520px;
@@ -364,8 +397,7 @@ html[data-puzzle-id="1"] .complete h2 {
   color: #1d4737;
 }
 
-html[data-puzzle-id="1"] .complete p,
-html[data-puzzle-id="1"] .journey-await {
+html[data-puzzle-id="1"] .complete p {
   color: #1d4737;
 }
 
@@ -384,7 +416,7 @@ html[data-puzzle-id="1"] .journey-await {
   color: var(--text);
 }
 
-/* Begin gate & journey end */
+/* Begin gate & completion */
 .begin-gate-actions {
   margin-top: 1.25rem;
 }
@@ -393,26 +425,99 @@ html[data-puzzle-id="1"] .journey-await {
   margin-top: 1.35rem;
 }
 
-.journey-end .journey-await,
-.journey-await {
-  margin: 0;
-  font-size: 1.05rem;
-  line-height: 1.5;
-  text-align: center;
+/* Home: puzzle picker (3×5 grid) */
+.puzzle-home-card {
+  max-width: min(100% - 1.5rem, 40rem);
+  margin-inline: auto;
+}
+
+.puzzle-home-heading {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 700;
   color: var(--text);
 }
 
-.journey-unlock {
-  margin: 0 0 0.85rem;
+.puzzle-home-lead {
+  margin: 0 0 1rem;
   font-size: 0.95rem;
-  line-height: 1.45;
-  text-align: center;
-  color: var(--text);
+  line-height: 1.5;
+  color: var(--muted);
 }
 
-.journey-unlock--final {
-  margin-top: -0.35rem;
-  margin-bottom: 0.9rem;
+.puzzle-home-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 0.5rem;
+}
+
+.puzzle-home-item {
+  margin: 0;
+  min-width: 0;
+}
+
+.puzzle-home-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  height: 100%;
+  min-height: 5.25rem;
+  margin: 0;
+  padding: 0.5rem 0.35rem;
+  text-align: center;
+  font: inherit;
+  color: var(--text);
+  background: color-mix(in srgb, var(--surface) 88%, var(--bg));
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s ease;
+}
+
+.puzzle-home-btn:hover {
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface));
+  border-color: var(--accent);
+}
+
+.puzzle-home-btn:active {
+  transform: scale(0.99);
+}
+
+.puzzle-home-num {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.65rem;
+  height: 1.65rem;
+  padding: 0 0.35rem;
+  font-size: clamp(0.72rem, 2.4vw, 0.82rem);
+  font-weight: 700;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--btn-text);
+}
+
+.puzzle-home-title {
+  font-size: clamp(0.62rem, 2.1vw, 0.82rem);
+  font-weight: 600;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 /* —— Unscramble title —— */
