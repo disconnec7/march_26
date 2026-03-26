@@ -496,7 +496,7 @@
     type: "caesar_tracks",
     companion: {
       description:
-        "Each round gives you five Taylor songs from five different albums. They have something in common—and that same thing tells you how to undo the scrambled line underneath (shift every letter backward in the alphabet by that amount). Where an album has a Taylor’s Version, use that edition’s tracklist.",
+        "Each round gives you five Taylor songs from five different albums. They have something in common, and that same thing tells you how to undo the scrambled line underneath (shift every letter backward in the alphabet by that amount). Where an album has a Taylor's Version, use that edition's tracklist.",
     },
     intro:
       "What’s the link between the five songs? The line under them is another Taylor title, letters shifted backward in the alphabet by that same hidden number. Decode it and type the song name.",
@@ -621,12 +621,517 @@
     ],
   };
 
+  var PUZZLE_6 = {
+    id: 6,
+    puzzleTitle: "Guess the song",
+    type: "sequential_clues",
+    companion: {
+      description: "",
+    },
+    clues: [
+      { text: "What's this song?\n❤️ 📖", answers: ["love story"] },
+      { text: "What's this song?\n🖼️ 🖼️ 🖼️ 🔥", answers: ["pictures to burn"] },
+      {
+        text:
+          "What's this song?\n🌲🌲🌲🌲🌲🌲🌲\n🌲🌲🌲🌲🌲🌲🌲   🙋‍♀️\n🌲🌲🌲🌲🌲🌲🌲\n🌲🌲🌲🌲🌲🌲🌲",
+        answers: ["out of the woods"],
+      },
+      { text: "What's this song?\n📄💍", answers: ["paper rings"] },
+      {
+        text: "What's this song?",
+        imageUrl: "assets/puzzle6_teardrops_on_my_guitar.png",
+        answers: ["teardrops on my guitar"],
+      },
+      {
+        text: "What's this song?",
+        imageUrl: "assets/puzzle6_all_too_well_2s.png",
+        answers: ["all too well"],
+      },
+      {
+        text: "What's this song?",
+        imageUrl: "assets/puzzle6_22.png",
+        answers: ["22", "twenty two", "twentytwo"],
+      },
+      {
+        text: "What's this song?",
+        imageUrl: "assets/puzzle6_gold_rush.png",
+        answers: ["gold rush"],
+      },
+      {
+        text: "What's this song?",
+        imageUrl: "assets/puzzle6_jump_then_fall.png",
+        answers: ["jump then fall"],
+      },
+      {
+        text: "What's this song?",
+        imageUrl: "assets/puzzle6_state_of_grace.png",
+        answers: ["state of grace"],
+      },
+      { text: "What's this song?", blankClue: true, answers: ["blank space"] },
+    ],
+  };
+
+  var PUZZLE_7 = {
+    id: 7,
+    puzzleTitle: "Find the connections",
+    type: "connections",
+    companion: {
+      description:
+        "Another board, same rules: find four groups of four words that belong together.",
+    },
+    groups: [
+      ["WILDEST DREAMS", "STYLE", "SHAKE IT OFF", "BLANK SPACE"],
+      ["RAIN", "THUNDER", "SNOW", "SUNSHINE"],
+      ["DRESS", "CARDIGAN", "SCARF", "RING"],
+      ["RED", "BLUE", "GREEN", "GOLD"],
+    ],
+    shuffle: true,
+  };
+
+  var PUZZLE_8 = {
+    id: 8,
+    puzzleTitle: "Unscramble the song title",
+    type: "unscramble",
+    companion: {
+      description:
+        "Ten more scrambled titles. Spaces and punctuation still do not matter.",
+    },
+    rounds: [
+      { scrambled: "DEHNACTNE", answers: ["enchanted"] },
+      { scrambled: "EDELBWEEJ", answers: ["bejeweled"] },
+      { scrambled: "MCRTAOWSNINE", answers: ["new romantics", "newromantics"] },
+      {
+        scrambled: "NTEAIRSCOERLTE",
+        answers: ["cornelia street", "corneliastreet"],
+      },
+      { scrambled: "TMNRSADEMI", answers: ["mastermind"] },
+      { scrambled: "NCALE", answers: ["clean"] },
+      { scrambled: "YTDIALGH", answers: ["daylight"] },
+      { scrambled: "NOAROM", answers: ["maroon"] },
+      { scrambled: "GNLOEIVL", answers: ["long live", "longlive"] },
+      { scrambled: "NIGACRAD", answers: ["cardigan"] },
+    ],
+  };
+
+  var PUZZLE_9 = {
+    id: 9,
+    puzzleTitle: "The hidden track number",
+    type: "caesar_tracks",
+    companion: {
+      description:
+        "Each round gives you five Taylor songs from five different albums. They have something in common, and that same thing tells you how to undo the scrambled line underneath (shift every letter backward in the alphabet by that amount). Where an album has a Taylor's Version, use that edition's tracklist.",
+    },
+    intro:
+      "What's the link between the five songs? The line under them is another Taylor title, letters shifted backward in the alphabet by that same hidden number. Decode it and type the song name.",
+    rounds: [
+      {
+        title: "Cruel Summer",
+        trackNumber: 2,
+        hints: [
+          { song: "Style", album: "1989 (Taylor's Version)" },
+          { song: "Fifteen", album: "Fearless (Taylor's Version)" },
+          { song: "Red", album: "Red (Taylor's Version)" },
+          { song: "Sparks Fly", album: "Speak Now (Taylor's Version)" },
+          { song: "Maroon", album: "Midnights" },
+        ],
+      },
+      {
+        title: "Back to December",
+        trackNumber: 3,
+        hints: [
+          { song: "Treacherous", album: "Red (Taylor's Version)" },
+          { song: "Love Story", album: "Fearless (Taylor's Version)" },
+          { song: "Style", album: "1989 (Taylor's Version)" },
+          { song: "Back to December", album: "Speak Now (Taylor's Version)" },
+          { song: "Lover", album: "Lover" },
+        ],
+      },
+      {
+        title: "Wildest Dreams",
+        trackNumber: 4,
+        hints: [
+          { song: "Out of the Woods", album: "1989 (Taylor's Version)" },
+          { song: "I Knew You Were Trouble", album: "Red (Taylor's Version)" },
+          { song: "Speak Now", album: "Speak Now (Taylor's Version)" },
+          { song: "Hey Stephen", album: "Fearless (Taylor's Version)" },
+          { song: "my tears ricochet", album: "folklore" },
+        ],
+      },
+      {
+        title: "You're On Your Own, Kid",
+        trackNumber: 5,
+        answers: ["youre on your own, kid", "you're on your own kid", "youre on your own kid"],
+        hints: [
+          { song: "All Too Well", album: "Red (Taylor's Version)" },
+          { song: "White Horse", album: "Fearless (Taylor's Version)" },
+          { song: "Dear John", album: "Speak Now (Taylor's Version)" },
+          { song: "All You Had to Do Was Stay", album: "1989 (Taylor's Version)" },
+          { song: "tolerate it", album: "evermore" },
+        ],
+      },
+      {
+        title: "Midnight Rain",
+        trackNumber: 6,
+        hints: [
+          { song: "22", album: "Red (Taylor's Version)" },
+          { song: "You Belong With Me", album: "Fearless (Taylor's Version)" },
+          { song: "Mean", album: "Speak Now (Taylor's Version)" },
+          { song: "Shake It Off", album: "1989 (Taylor's Version)" },
+          { song: "But Daddy I Love Him", album: "The Tortured Poets Department" },
+        ],
+      },
+    ],
+  };
+
+  var PUZZLE_10 = {
+    id: 10,
+    puzzleTitle: "Riddle me this",
+    type: "sequential_clues",
+    companion: {
+      description: "Solve each riddle with the correct Taylor answer.",
+    },
+    clues: [
+      {
+        text:
+          "She released this, full of pop delight,\na year in title that feels just right.\nWhat marks her era, both sleek and bright?",
+        answers: ["1989"],
+      },
+      {
+        text:
+          "With hearts painted pink, it's romantic and strong,\nwhere verses explore where love belongs.\nWhat album captures a thousand songs?",
+        answers: ["lover"],
+      },
+      {
+        text:
+          "Critics came, doubts took a seat,\nbut she danced through without defeat.\nWhat anthem defied all to a rhythmic beat?",
+        answers: ["shake it off", "shakeitoff"],
+      },
+      {
+        text:
+          "Stories woven like tales so old,\nhushed tones and lyrics unfold.\nWhich collection whispered mysteries untold?",
+        answers: ["folklore"],
+      },
+      {
+        text:
+          "Fans unite with shouts and cheer,\nthey know her songs, year by year.\nWhat title bonds the loyal and near?",
+        answers: ["switftie", "swiftie"],
+      },
+      {
+        text:
+          "It's fate and fate's reply, what you sow, you buy.\nWhich single shows justice that won't deny?",
+        answers: ["karma"],
+      },
+      {
+        text:
+          "She opens this with songs untold,\nhidden tracks worth their weight in gold.\nWhat holds stories both bold and old?",
+        answers: ["vault", "the vault"],
+      },
+    ],
+  };
+
+  var PUZZLE_11 = {
+    id: 11,
+    puzzleTitle: "Finish the lyric",
+    type: "sequential_clues",
+    companion: {
+      description: "Fill in the missing lyric word in each line.",
+    },
+    clues: [
+      {
+        text:
+          '"You call me up again just to break me like a promise, so casually ______ in the name of being honest."',
+        answers: ["cruel"],
+      },
+      {
+        text:
+          '"I\'ll stare directly at the sun but never in the ______. It must be exhausting always rooting for the anti-hero."',
+        answers: ["mirror"],
+      },
+      {
+        text:
+          '"Talk your talk and go ______, I just need this love spiral."',
+        answers: ["viral"],
+      },
+      {
+        text:
+          '"Say you\'ll remember me, standing in a nice dress, staring at the ______."',
+        answers: ["sunset"],
+      },
+      {
+        text:
+          '"I hit the Sunday ______, you know the greatest films of all time were never made."',
+        answers: ["matinee", "matinée"],
+      },
+      {
+        text:
+          '"Quiet my fears with the touch of your hand, paper cut stings from our ______ thin plans."',
+        answers: ["paper"],
+      },
+      {
+        text:
+          '"We were a ______ page on the desk, filling in the blanks as we go."',
+        answers: ["fresh"],
+      },
+      {
+        text:
+          '"Screaming, who could ever ______ me, darling? But who could stay?"',
+        answers: ["leave"],
+      },
+      {
+        text:
+          '"Trying to figure out what is and isn\'t true, and I don\'t try to hide my ______."',
+        answers: ["tears"],
+      },
+      {
+        text:
+          '"And you can aim for my heart, go for blood, but you would still miss me in your ______."',
+        answers: ["bones"],
+      },
+      {
+        text:
+          '"Your Midas touch on the Chevy door, November flush and your ______ cure."',
+        answers: ["flannel"],
+      },
+      {
+        text:
+          '"They all warned us about times like this, they say the ______ gets hard and you get lost."',
+        answers: ["road"],
+      },
+      {
+        text:
+          '"The whole school is rolling fake ______, you play stupid games, you win stupid prizes."',
+        answers: ["dice"],
+      },
+      {
+        text:
+          '"And baby, I\'ll admit I\'ve been a little ______, fingers crossed until you put your hand on mine."',
+        answers: ["superstitious"],
+      },
+      {
+        text:
+          '"This ain\'t Hollywood, this is a small town, I was a ______ before you went and let me down."',
+        answers: ["dreamer"],
+      },
+    ],
+  };
+
+  var PUZZLE_12 = {
+    id: 12,
+    puzzleTitle: "Unscramble the song title",
+    type: "unscramble",
+    companion: {
+      description:
+        "Recent-era scramble: mostly Tortured Poets, plus a couple of showgirl-energy picks. Solve all ten.",
+    },
+    rounds: [
+      { scrambled: "GFTORTINH", answers: ["fortnight"] },
+      { scrambled: "ODBADNW", answers: ["down bad"] },
+      { scrambled: "ONOGLONOLDSN", answers: ["so long london", "so long, london"] },
+      {
+        scrambled: "MDYLAEVIBUDHDOIT",
+        answers: ["but daddy i love him"],
+      },
+      {
+        scrambled: "HKEIAHRTNIIOTAWCOTEDBANR",
+        answers: ["i can do it with a broken heart"],
+      },
+      {
+        scrambled: "HTAEOIWOLDOEFTASDLLFIMR",
+        answers: ["who's afraid of little old me", "whos afraid of little old me"],
+      },
+      {
+        scrambled: "NIYSSTUIGAL",
+        answers: ["guilty as sin", "guilty as sin?"],
+      },
+      { scrambled: "DHAOKEBGCTL", answers: ["the black dog"] },
+      {
+        scrambled: "TIACMEBYGOKUGNNAO",
+        answers: ["imgonnagetyouback", "im gonna get you back"],
+      },
+      { scrambled: "ATARSSHEBLTO", answers: ["the albatross"] },
+    ],
+  };
+
+  var PUZZLE_13 = {
+    id: 13,
+    puzzleTitle: "Finish the lyric",
+    type: "sequential_clues",
+    companion: {
+      description: "Fill in each missing lyric phrase.",
+    },
+    clues: [
+      {
+        text:
+          "I got tired of waiting\nWondering if you were ever coming around\nMy faith in you was fading\nWhen I ___ ___ __ ___ _________ __ ____",
+        answers: ["met you on the outskirts of town"],
+      },
+      {
+        text:
+          "A friend to all is a friend to none\nChase two girls, ____ ___ ___",
+        answers: ["lose the one"],
+      },
+      {
+        text:
+          "One day I'll watch as you're leaving\n'Cause you got tired __ __ ________",
+        answers: ["of my scheming"],
+      },
+      {
+        text:
+          "Dreaming about the day when you wake up and find\nThat what you're looking for has ____ ____ ___ _____ ____",
+        answers: ["been here the whole time"],
+      },
+      {
+        text:
+          "You'll see me in hindsight\nTangled up with you all night\n_______ __ ____",
+        answers: ["burning it down"],
+      },
+      {
+        text:
+          "And I'm highly suspicious that everyone who sees you wants you\nI've loved you three summers now, honey, but _ ____ ____ ___",
+        answers: ["i want them all"],
+      },
+      {
+        text:
+          "Second, third, and hundreth chances\nBalancin' on ________ ________",
+        answers: ["breaking branches"],
+      },
+      {
+        text:
+          "We hadn't seen each other in a month\nWhen you said ___ ______ _____ (____?)",
+        answers: ["you needed space (what?)", "you needed space"],
+      },
+      {
+        text:
+          "Your mom's ring in your pocket\nHer picture in your wallet\nYou won't remember all my _____ _________",
+        answers: ["champagne problems"],
+      },
+      {
+        text:
+          "Don't you dare look outside your window, darling, everything's on fire\nThe war outside our door raging on\nHold onto this lullaby, ____ ____ ___ _______ ____, ____",
+        answers: [
+          "even when the music's gone, gone",
+          "even when the musics gone, gone",
+          "even when the music's gone gone",
+          "even when the musics gone gone",
+        ],
+      },
+      {
+        text:
+          "This night is sparkling, don't you let it go\nI'm wonderstruck, blushing ___ ___ ____ ____",
+        answers: ["all the way home"],
+      },
+      {
+        text:
+          "Every woman that you knew brought you here\nI wanna _____ ___ ___ _______ _____",
+        answers: ["teach you how forever feels"],
+      },
+    ],
+  };
+
+  var PUZZLE_14 = {
+    id: 14,
+    puzzleTitle: "The hidden track number",
+    type: "caesar_tracks",
+    companion: {
+      description:
+        "Each round gives you five Taylor songs from five different albums. They have something in common-and that same thing tells you how to undo the scrambled line underneath (shift every letter backward in the alphabet by that amount). Where an album has a Taylor's Version, use that edition's tracklist.",
+    },
+    intro:
+      "What's the link between the five songs? The line under them is another Taylor title, letters shifted backward in the alphabet by that same hidden number. Decode it and type the song name.",
+    rounds: [
+      {
+        title: "Fortnight",
+        trackNumber: 2,
+        hints: [
+          { song: "Maroon", album: "Midnights" },
+          { song: "Red", album: "Red (Taylor's Version)" },
+          { song: "Fifteen", album: "Fearless (Taylor's Version)" },
+          { song: "Style", album: "1989 (Taylor's Version)" },
+          { song: "Spotlight", album: "Life of a Showgirl" },
+        ],
+      },
+      {
+        title: "So High School",
+        trackNumber: 3,
+        hints: [
+          { song: "Treacherous", album: "Red (Taylor's Version)" },
+          { song: "Love Story", album: "Fearless (Taylor's Version)" },
+          { song: "Back to December", album: "Speak Now (Taylor's Version)" },
+          { song: "Style", album: "1989 (Taylor's Version)" },
+          { song: "Spotlight", album: "Life of a Showgirl" },
+        ],
+      },
+      {
+        title: "The Alchemy",
+        trackNumber: 4,
+        hints: [
+          { song: "Out of the Woods", album: "1989 (Taylor's Version)" },
+          { song: "I Knew You Were Trouble", album: "Red (Taylor's Version)" },
+          { song: "Speak Now", album: "Speak Now (Taylor's Version)" },
+          { song: "Hey Stephen", album: "Fearless (Taylor's Version)" },
+          { song: "Encore", album: "Life of a Showgirl" },
+        ],
+      },
+      {
+        title: "Clara Bow",
+        trackNumber: 5,
+        hints: [
+          { song: "All Too Well", album: "Red (Taylor's Version)" },
+          { song: "White Horse", album: "Fearless (Taylor's Version)" },
+          { song: "Dear John", album: "Speak Now (Taylor's Version)" },
+          { song: "All You Had to Do Was Stay", album: "1989 (Taylor's Version)" },
+          { song: "tolerate it", album: "evermore" },
+        ],
+      },
+      {
+        title: "Life of a Showgirl",
+        trackNumber: 6,
+        answers: ["life of a showgirl", "lifeofashowgirl"],
+        hints: [
+          { song: "22", album: "Red (Taylor's Version)" },
+          { song: "You Belong With Me", album: "Fearless (Taylor's Version)" },
+          { song: "Mean", album: "Speak Now (Taylor's Version)" },
+          { song: "Shake It Off", album: "1989 (Taylor's Version)" },
+          { song: "But Daddy I Love Him", album: "The Tortured Poets Department" },
+        ],
+      },
+    ],
+  };
+
+  var PUZZLE_15 = {
+    id: 15,
+    puzzleTitle: "Final question",
+    type: "multiple_choice",
+    companion: {
+      description: "",
+    },
+    question: "Do you like taylor swift?",
+    options: [
+      { label: "Yes", correct: false },
+      { label: "Hell YES", correct: false },
+      {
+        label: "Nah, she's only as important as air and who needs air anyway",
+        correct: true,
+      },
+    ],
+  };
+
   var REGISTRY = {
     1: PUZZLE_1,
     2: PUZZLE_2,
     3: PUZZLE_3,
     4: PUZZLE_4,
     5: PUZZLE_5,
+    6: PUZZLE_6,
+    7: PUZZLE_7,
+    8: PUZZLE_8,
+    9: PUZZLE_9,
+    10: PUZZLE_10,
+    11: PUZZLE_11,
+    12: PUZZLE_12,
+    13: PUZZLE_13,
+    14: PUZZLE_14,
+    15: PUZZLE_15,
   };
 
   function escapeAttr(str) {
@@ -642,10 +1147,35 @@
     return d.innerHTML;
   }
 
+  function ultimateClueForPuzzleId(puzzleId) {
+    var map = {
+      2: "W",
+      5: "1",
+      7: "B",
+      9: "2",
+      12: "E",
+      15: "L",
+    };
+    return map[puzzleId] || null;
+  }
+
   /** After “Continue your journey”. */
-  function renderJourneyAwaitScreen(root) {
+  function renderJourneyAwaitScreen(root, puzzleId) {
+    var clue = ultimateClueForPuzzleId(puzzleId);
+    var unlockMsg = "";
+    if (clue) {
+      unlockMsg =
+        '<p class="journey-unlock">You\'ve unlocked <strong>' +
+        escapeHtml(clue) +
+        "</strong>, note it down as you'll need it later.</p>";
+      if (puzzleId === 15) {
+        unlockMsg +=
+          '<p class="journey-unlock journey-unlock--final">All parts of the cipher are now revealed.</p>';
+      }
+    }
     root.innerHTML =
       '<div class="card complete journey-end">' +
+      unlockMsg +
       '<p class="journey-await">Await further instructions</p>' +
       "</div>";
   }
@@ -678,7 +1208,7 @@
     var cbtn = document.getElementById("btn-continue-journey");
     if (cbtn) {
       cbtn.addEventListener("click", function () {
-        renderJourneyAwaitScreen(root);
+        renderJourneyAwaitScreen(root, puzzleId);
       });
     }
   }
@@ -750,6 +1280,23 @@
         escapeHtml(puzzleTitle) +
         "</h2>";
       var missionBanner = puzzleMissionBannerHtml(def);
+      var clueHtml = "";
+      if (c.blankClue) {
+        clueHtml =
+          '<div class="clue clue--visual">' +
+          (c.text ? '<p class="clue-prompt">' + escapeHtml(c.text) + "</p>" : "") +
+          '<div class="clue-blank-space" role="img" aria-label="Blank clue"></div></div>';
+      } else if (c.imageUrl) {
+        clueHtml =
+          '<div class="clue clue--visual">' +
+          (c.text ? '<p class="clue-prompt">' + escapeHtml(c.text) + "</p>" : "") +
+          '<img class="clue-image" src="' +
+          escapeAttr(c.imageUrl) +
+          '" alt="Song clue image" loading="lazy" />' +
+          "</div>";
+      } else {
+        clueHtml = '<p class="clue" id="clue-text">' + escapeHtml(c.text) + "</p>";
+      }
 
       root.innerHTML =
         '<div class="card" id="puzzle-card">' +
@@ -765,9 +1312,7 @@
         pct +
         '%"></div></div>' +
         "</div>" +
-        '<p class="clue" id="clue-text">' +
-        escapeHtml(c.text) +
-        "</p>" +
+        clueHtml +
         '<div class="form-row">' +
         '<label for="answer">Your answer</label>' +
         '<input type="text" id="answer" autocomplete="off" placeholder="Type the answer" />' +
@@ -817,6 +1362,78 @@
     renderPuzzleBeginGate(root, def, function () {
       renderStep();
     });
+  }
+
+  function renderMultipleChoice(root, def) {
+    var puzzleTitle =
+      def.puzzleTitle != null
+        ? def.puzzleTitle
+        : def.title != null
+          ? def.title
+          : "Choose one";
+    var missionBanner = puzzleMissionBannerHtml(def);
+    var opts = def.options || [];
+    if (!opts.length) {
+      renderPlaceholder(root, def.id);
+      return;
+    }
+
+    var i;
+    var buttonsHtml = "";
+    for (i = 0; i < opts.length; i++) {
+      buttonsHtml +=
+        '<button type="button" class="secondary mcq-option" data-opt="' +
+        i +
+        '">' +
+        escapeHtml(opts[i].label) +
+        "</button>";
+    }
+
+    function renderQuestion() {
+      root.innerHTML =
+        '<div class="card mcq-card" id="mcq-root">' +
+        '<h2 class="puzzle-heading puzzle-heading--solo">' +
+        escapeHtml(puzzleTitle) +
+        "</h2>" +
+        missionBanner +
+        '<p class="clue mcq-question">' +
+        escapeHtml(def.question || "Choose the correct option.") +
+        "</p>" +
+        '<div class="actions mcq-actions">' +
+        buttonsHtml +
+        "</div>" +
+        '<p class="message" id="mcq-msg" aria-live="polite"></p>' +
+        "</div>";
+
+      var msg = document.getElementById("mcq-msg");
+      var btns = root.querySelectorAll(".mcq-option");
+      var bi;
+      function onChoice(e) {
+        var idx = parseInt(e.currentTarget.dataset.opt, 10);
+        var opt = opts[idx];
+        if (!opt) return;
+        if (!opt.correct) {
+          msg.className = "message error";
+          msg.textContent = "Not quite - try another option.";
+          return;
+        }
+        msg.className = "message success";
+        msg.textContent = "Correct.";
+        for (bi = 0; bi < btns.length; bi++) btns[bi].disabled = true;
+        setTimeout(function () {
+          showPuzzleCompleteWithContinue(
+            root,
+            "<h2>You did it!</h2><p>Final answer locked in.</p>",
+            def.id
+          );
+        }, 650);
+      }
+      for (bi = 0; bi < btns.length; bi++) {
+        btns[bi].addEventListener("click", onChoice);
+      }
+    }
+
+    renderPuzzleBeginGate(root, def, renderQuestion);
   }
 
   function renderCaesarTracks(root, def) {
@@ -1261,6 +1878,11 @@
 
     if (def.type === "caesar_tracks") {
       renderCaesarTracks(root, def);
+      return;
+    }
+
+    if (def.type === "multiple_choice") {
+      renderMultipleChoice(root, def);
       return;
     }
 

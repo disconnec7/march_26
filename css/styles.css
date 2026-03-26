@@ -162,6 +162,33 @@ body {
   line-height: 1.55;
   margin-bottom: 1.1rem;
   min-height: 4.5rem;
+  white-space: pre-line;
+}
+
+.clue--visual {
+  min-height: 0;
+}
+
+.clue-prompt {
+  margin: 0 0 0.55rem;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.clue-image {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+}
+
+.clue-blank-space {
+  height: 190px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: #ffffff;
 }
 
 .form-row {
@@ -196,6 +223,16 @@ input[type="text"]:focus {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.25rem;
+}
+
+.mcq-actions {
+  flex-direction: column;
+}
+
+.mcq-option {
+  text-align: left;
+  white-space: normal;
+  line-height: 1.35;
 }
 
 button {
@@ -363,6 +400,19 @@ html[data-puzzle-id="1"] .journey-await {
   line-height: 1.5;
   text-align: center;
   color: var(--text);
+}
+
+.journey-unlock {
+  margin: 0 0 0.85rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--text);
+}
+
+.journey-unlock--final {
+  margin-top: -0.35rem;
+  margin-bottom: 0.9rem;
 }
 
 /* —— Unscramble title —— */
