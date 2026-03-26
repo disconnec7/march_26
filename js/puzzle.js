@@ -247,8 +247,9 @@
   }
 
   /**
-   * Encode a title for display: each letter moves n positions backward
-   * in the alphabet (A → V when n = 5, etc.). Spaces & punctuation unchanged.
+   * Encode a title for display: each letter moves n positions backward in the
+   * alphabet (A → V when n = 5, etc.). Player decodes by shifting forward by n.
+   * Spaces & punctuation unchanged.
    */
   function caesarEncodeTrackShift(plain, n) {
     var steps = -Math.abs(Number(n) || 0);
@@ -522,10 +523,10 @@
     type: "caesar_tracks",
     companion: {
       description:
-        "Each round gives you five Taylor songs from five different albums. They have something in common, and that same thing tells you how to undo the scrambled line underneath (shift every letter backward in the alphabet by that amount). Where an album has a Taylor's Version, use that edition's tracklist.",
+        "Each round gives you five Taylor songs from five different albums. They have something in common: a track number. Use that same number as how many places to shift each letter forward in the alphabet on the scrambled line underneath to reveal the song title. Where an album has a Taylor's Version, use that edition's tracklist.",
     },
     intro:
-      "What’s the link between the five songs? The line under them is another Taylor title, letters shifted backward in the alphabet by that same hidden number. Decode it and type the song name.",
+      "What’s the link between the five songs? The scrambled line is another Taylor title whose letters were shifted to make the puzzle—shift each letter forward in the alphabet by that same track number to read it, then type the song name.",
     rounds: [
       {
         title: "cardigan",
@@ -745,10 +746,10 @@
     type: "caesar_tracks",
     companion: {
       description:
-        "Each round gives you five Taylor songs from five different albums. They have something in common, and that same thing tells you how to undo the scrambled line underneath (shift every letter backward in the alphabet by that amount). Where an album has a Taylor's Version, use that edition's tracklist.",
+        "Each round gives you five Taylor songs from five different albums. They have something in common: a track number. Use that same number as how many places to shift each letter forward in the alphabet on the scrambled line underneath to reveal the song title. Where an album has a Taylor's Version, use that edition's tracklist.",
     },
     intro:
-      "What's the link between the five songs? The line under them is another Taylor title, letters shifted backward in the alphabet by that same hidden number. Decode it and type the song name.",
+      "What's the link between the five songs? The scrambled line is another Taylor title whose letters were shifted to make the puzzle—shift each letter forward in the alphabet by that same track number to read it, then type the song name.",
     rounds: [
       {
         title: "Cruel Summer",
@@ -1060,10 +1061,10 @@
     type: "caesar_tracks",
     companion: {
       description:
-        "Each round gives you five Taylor songs from five different albums. They have something in common, and that same thing tells you how to undo the scrambled line underneath (shift every letter backward in the alphabet by that amount). Where an album has a Taylor's Version, use that edition's tracklist.",
+        "Each round gives you five Taylor songs from five different albums. They have something in common: a track number. Use that same number as how many places to shift each letter forward in the alphabet on the scrambled line underneath to reveal the song title. Where an album has a Taylor's Version, use that edition's tracklist.",
     },
     intro:
-      "What's the link between the five songs? The line under them is another Taylor title, letters shifted backward in the alphabet by that same hidden number. Decode it and type the song name.",
+      "What's the link between the five songs? The scrambled line is another Taylor title whose letters were shifted to make the puzzle—shift each letter forward in the alphabet by that same track number to read it, then type the song name.",
     rounds: [
       {
         title: "Fortnight",
